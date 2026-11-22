@@ -1,0 +1,103 @@
+@import "tailwindcss";
+
+/*
+  DESIGN TOKENS: a semester wall planner.
+  Base palette (7). Contrast measured with the WCAG formula:
+    ink on paper 13.2:1   ink on sheet 14.6:1   ink-soft on paper 7.0:1   ink-soft on sheet 7.7:1
+    white on pin 7.6:1    pin on paper 6.6:1    ink on pin-soft 11.8:1    pin on pin-soft 5.9:1
+  Course tabs (6): the text on every tab is ink, between 7.8:1 and 9.0:1.
+  Each tab also has a darker "edge" colour, used for borders only (3.7:1 to 5.5:1 against paper).
+  `rule` is decoration (the faint grid). It never carries information on its own.
+*/
+@theme {
+  --color-paper: #eef1ea;
+  --color-sheet: #fbfcf8;
+  --color-ink: #1b2928;
+  --color-ink-soft: #455452;
+  --color-rule: #b7c0b1;
+  --color-pin: #a0185c;
+  --color-pin-soft: #f7dde9;
+
+  --color-course-blue: #9cc3f0;
+  --color-course-green: #9ad6a9;
+  --color-course-orange: #f4bc78;
+  --color-course-purple: #c6b0ec;
+  --color-course-teal: #7ed3cf;
+  --color-course-rose: #f2a9bf;
+
+  --color-edge-blue: #2f6db5;
+  --color-edge-green: #2e8049;
+  --color-edge-orange: #b8661a;
+  --color-edge-purple: #6d4db3;
+  --color-edge-teal: #1b7c78;
+  --color-edge-rose: #b8416a;
+
+  --font-display: "Zilla Slab", Georgia, serif;
+  --font-sans: "Familjen Grotesk", system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    font-size: 100%;
+    color: var(--color-ink);
+    background-color: var(--color-paper);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* A faint wall-chart grid behind everything. Decoration only. */
+  body {
+    min-height: 100vh;
+    line-height: 1.5;
+    background-image:
+      linear-gradient(to right, color-mix(in srgb, var(--color-rule) 35%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in srgb, var(--color-rule) 35%, transparent) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.005em;
+  }
+
+  /* One focus ring for everything: a dark ring with a light gap, readable on paper, sheet and colour tabs. */
+  :focus-visible {
+    outline: 3px solid var(--color-ink);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 2px var(--color-sheet);
+  }
+
+  ::selection {
+    background: var(--color-pin-soft);
+  }
+}
+
+/* The week load gauge fills once when it appears, so a change in workload is noticed. */
+@keyframes gauge-fill {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+.gauge-segment {
+  transform-origin: bottom;
+  animation: gauge-fill 420ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
